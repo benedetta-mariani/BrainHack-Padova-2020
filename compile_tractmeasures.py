@@ -8,11 +8,27 @@ import os, sys, argparse
 import glob
 
 
+"""
+This python script is designed to open tsv files downloaded from the platform Brainlife and to aggregate them in a unique tsv file.
+It is specifically designed to aggregate files relative to just one tag (e. g. dti tract measures).
+To be effective,your files should be organized as in the next example (which as far as I know is automatically done when downoading 
+from brainlife) :
+proj/sub-987074
+/dt-neuro-dsistudio-tractmeasures.id-5fc365d1576e194135a9fedc/
+tractmeasures/dwi.nii.gz.gqi.1.25.fib.gz.Vertical_Occipital_Fasciculus_R.stat.txt
 
+where proj is the directory of download. The file tractmeasures should contain all the tsv (txt) files for the fibers of that subject. 
+The directory that contains 'tractmeasures', should also contain a json file, here called '_info.json'.
+
+The output file is called 'tractmeasures.tsv'. To read it, just type pd.read_csv('tractmeasures.tsv', index_col = 0).
+The index of this file is composed by the tract names, while the columns are the Subjects ID and the dti tractmeasures.
+
+To obtain files relative to the single tracts, see the script "singletracts.py"
+"""
 
 def concatenateData(subject,tag, dire):
 
-	#print('now',  os.getcwd())
+	
 	filelist2 = []
 	for a,b,filelist in os.walk(dire):
 		for filename in np.sort(filelist):
@@ -60,24 +76,18 @@ def main(firstdir):
 	for filename in dirs:
 		os.chdir(firstdir)
 		if "sub" in filename:
-			#print(os.getcwd())
+			
 			os.chdir(filename)
-			#print(os.getcwd())
+		
 			dire = os.getcwd()
 			dire= os.listdir(dire)[0]
 			os.chdir(dire)
-			#print(os.getcwd())
-			
-			#print('Subject:',filename)
-			
-			#### load config ####
+		
 			with open('_info.json','r') as config_f:
 				config = json.load(config_f)
 
 			
-			#### parse inputs ####
 			subjects = config['meta']['subject'] 
-			#sessions = config['meta']['session'] 
 			
 			tags =  config['tags'] 
 		
@@ -85,10 +95,7 @@ def main(firstdir):
 		
 			if os.path.isdir(dire):
 				os.chdir(dire)
-				#print(os.getcwd())
 				
-				#### run command to generate csv structures ####
-				#print("concatenating tractmeasures")
 				
 				d = concatenateData(subjects,tags, os.getcwd())
 
@@ -101,7 +108,7 @@ def main(firstdir):
 
 			else:
 				print('Subject not present',filename)
-	#data.drop([0], inplace = True)
+
 	os.chdir(firstdir)
 	data.to_csv('./tractmeasures.tsv',sep='\t',index=False)
 
@@ -113,5 +120,3 @@ def main(firstdir):
 firstdir = os.getcwd()
 main(firstdir)
 
-#if __name__ == '__main__':
-#	main()
