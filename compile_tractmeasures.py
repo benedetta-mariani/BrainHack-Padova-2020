@@ -5,7 +5,7 @@ import subprocess
 import pandas as pd
 import numpy as np
 import os, sys, argparse
-import glob
+
 
 
 """
@@ -20,7 +20,7 @@ tractmeasures/dwi.nii.gz.gqi.1.25.fib.gz.Vertical_Occipital_Fasciculus_R.stat.tx
 where proj is the directory of download. The file tractmeasures should contain all the tsv (txt) files for the fibers of that subject. 
 The directory that contains 'tractmeasures', should also contain a json file, here called '_info.json'.
 
-The output file is called 'tractmeasures.tsv'. To read it, just type pd.read_csv('tractmeasures.tsv', index_col = 0).
+The output file is called 'tractmeasures.tsv'. To read it, just type pd.read_csv('tractmeasures.tsv',sep = '\t', index_col = 0).
 The index of this file is composed by the tract names, while the columns are the Subjects ID and the dti tractmeasures.
 
 To obtain files relative to the single tracts, see the script "singletracts.py"
@@ -29,18 +29,17 @@ To obtain files relative to the single tracts, see the script "singletracts.py"
 def concatenateData(subject,tag, dire):
 
 	
+	
 	filelist2 = []
-	for a,b,filelist in os.walk(dire):
-		for filename in np.sort(filelist):
-			if ".txt" in filename.lower() and filename != "report.txt" and "no_result" not in filename.lower():
-				filelist2.append(filename)
+	for filename in os.listdir(dire):
+		if ".txt" in filename.lower() and filename != "report.txt" and "no_result" not in filename.lower():
+			filelist2.append(filename)
 
 
-	k = 0
 	l = []
 	for filename in filelist2:
 		l.append(filename[27:-9])
-		k += 1
+
 
 
 	filelist3 = []
