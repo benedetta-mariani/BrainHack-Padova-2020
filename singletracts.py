@@ -25,7 +25,10 @@ def main(xlsx, out):
 	df = pd.read_csv('tractmeasures.tsv',sep='\t',index_col = 0) # aggregated file
 
 	for tract in list(set(df.index)):
+		
+
 		idxs = np.where(df.index == tract)[0]
+		
 		data = pd.DataFrame(df.iloc[idxs])
 		data.index = data.values[:,0]
 		col = data.columns[1:]
@@ -46,8 +49,10 @@ def main(xlsx, out):
 
 if __name__ == "__main__":
 	
-	dirr = input("Move to directory: ")
-	xlsx = input("Insert input file name (without '') ")
-	out = input("Insert label for output files (They will be named 'Tractname label.tsv' ")
-	os.chdir(dirr)
+	dirr = input("Type y if you are in the right directory or type the directory where you want to go ")
+	if dirr != "y":
+		os.chdir(dirr)
+	xlsx = input("Insert input file name ")
+	out = input("Insert label for output files (They will be named 'Tractname label.tsv') ")
+	
 	main(xlsx, out)
