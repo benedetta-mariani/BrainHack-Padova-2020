@@ -115,7 +115,7 @@ def main(firstdir):
 	to open: 
 	pd.read_csv(---, index_col = 0)
 	"""
-
-firstdir = os.getcwd()
-main(firstdir)
+if __name__ == "__main__":
+	firstdir = os.getcwd()
+	main(firstdir)
 
