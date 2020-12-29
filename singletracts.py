@@ -25,7 +25,7 @@ def main(xlsx, out):
 	df = pd.read_csv('tractmeasures.tsv',sep='\t',index_col = 0) # aggregated file
 
 	for tract in list(set(df.index)):
-		idxs = np.where(df.index == tract)
+		idxs = np.where(df.index == tract)[0]
 		data = pd.DataFrame(df.iloc[idxs])
 		data.index = data.values[:,0]
 		col = data.columns[1:]
